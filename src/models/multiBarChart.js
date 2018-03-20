@@ -39,6 +39,7 @@ nv.models.multiBarChart = function() {
         , controlWidth = function() { return showControls ? 180 : 0 }
         , duration = 250
         , useInteractiveGuideline = false
+        , showZeroValue = true
         ;
 
     state.stacked = false // DEPRECATED Maintained for backward compatibility
@@ -413,14 +414,17 @@ nv.models.multiBarChart = function() {
                             });
                         });
 
-                    interactiveLayer.tooltip
-                        .data({
-                            value: xValue,
-                            index: pointIndex,
-                            series: allData
-                        })();
+                    if(xValue >0 || showZeroValue){
+                        interactiveLayer.tooltip
+                            .data({
+                                value: xValue,
+                                index: pointIndex,
+                                series: allData
+                            })();
 
-                    interactiveLayer.renderGuideLine(pointXLocation);
+                        interactiveLayer.renderGuideLine(pointXLocation);
+                    }
+
                 });
 
                 interactiveLayer.dispatch.on("elementMouseout",function(e) {
@@ -485,6 +489,7 @@ nv.models.multiBarChart = function() {
         rotateLabels:    {get: function(){return rotateLabels;}, set: function(_){rotateLabels=_;}},
         staggerLabels:    {get: function(){return staggerLabels;}, set: function(_){staggerLabels=_;}},
         wrapLabels:   {get: function(){return wrapLabels;}, set: function(_){wrapLabels=!!_;}},
+        showZeroValue:   {get: function(){return showZeroValue;}, set: function(_){showZeroValue=!!_;}},
 
         // options that require extra logic in the setter
         margin: {get: function(){return margin;}, set: function(_){
