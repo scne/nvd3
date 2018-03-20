@@ -12,7 +12,7 @@ nv.models.multiBarChart = function() {
         , legend = nv.models.legend()
         , controls = nv.models.legend()
         , tooltip = nv.models.tooltip()
-        ;
+    ;
 
     var margin = {top: 30, right: 20, bottom: 50, left: 60}
         , marginTop = null
@@ -40,7 +40,7 @@ nv.models.multiBarChart = function() {
         , duration = 250
         , useInteractiveGuideline = false
         , showZeroValue = true
-        ;
+    ;
 
     state.stacked = false // DEPRECATED Maintained for backward compatibility
 
@@ -192,14 +192,14 @@ nv.models.multiBarChart = function() {
                 if (legendPosition === 'bottom') {
                     legend.width(availableWidth - margin.right);
 
-                     g.select('.nv-legendWrap')
-                         .datum(data)
-                         .call(legend);
+                    g.select('.nv-legendWrap')
+                        .datum(data)
+                        .call(legend);
 
-                     margin.bottom = xAxis.height() + legend.height();
-                     availableHeight = nv.utils.availableHeight(height, container, margin);
-                     g.select('.nv-legendWrap')
-                         .attr('transform', 'translate(0,' + (availableHeight + xAxis.height())  +')');
+                    margin.bottom = xAxis.height() + legend.height();
+                    availableHeight = nv.utils.availableHeight(height, container, margin);
+                    g.select('.nv-legendWrap')
+                        .attr('transform', 'translate(0,' + (availableHeight + xAxis.height())  +')');
                 } else {
                     legend.width(availableWidth - controlWidth());
 
@@ -219,7 +219,7 @@ nv.models.multiBarChart = function() {
 
             // Controls
             if (!showControls) {
-                 g.select('.nv-controlsWrap').selectAll('*').remove();
+                g.select('.nv-controlsWrap').selectAll('*').remove();
             } else {
                 var controlsData = [
                     { key: controlLabels.grouped || 'Grouped', disabled: multibar.stacked() },
@@ -405,25 +405,26 @@ nv.models.multiBarChart = function() {
 
                             xValue = point.x;
                             if (singlePoint === undefined) singlePoint = point;
-                            if (pointXLocation === undefined) pointXLocation = e.mouseX
-                            allData.push({
-                                key: series.key,
-                                value: chart.y()(point, pointIndex),
-                                color: color(series,series.seriesIndex),
-                                data: series.values[pointIndex]
-                            });
+                            if (pointXLocation === undefined) pointXLocation = e.mouseX;
+                            if(xValue >0 || showZeroValue) {
+                                allData.push({
+                                    key: series.key,
+                                    value: chart.y()(point, pointIndex),
+                                    color: color(series, series.seriesIndex),
+                                    data: series.values[pointIndex]
+                                });
+                            }
                         });
 
-                    if(xValue >0 || showZeroValue){
-                        interactiveLayer.tooltip
-                            .data({
-                                value: xValue,
-                                index: pointIndex,
-                                series: allData
-                            })();
+                    interactiveLayer.tooltip
+                        .data({
+                            value: xValue,
+                            index: pointIndex,
+                            series: allData
+                        })();
 
-                        interactiveLayer.renderGuideLine(pointXLocation);
-                    }
+                    interactiveLayer.renderGuideLine(pointXLocation);
+
 
                 });
 
