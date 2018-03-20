@@ -41,6 +41,7 @@ nv.models.stackedAreaChart = function() {
         , controlOptions = ['Stacked','Stream','Expanded']
         , controlLabels = {}
         , duration = 250
+        , showZeroValue = true
         ;
 
     state.style = stacked.style();
@@ -427,17 +428,19 @@ nv.models.stackedAreaChart = function() {
 
                         //If we are in 'expand' mode, use the stacked percent value instead of raw value.
                         var tooltipValue = (stacked.style() == 'expand') ? point.display.y : chart.y()(point,pointIndex);
-                        allData.push({
-                            key: series.key,
-                            value: tooltipValue,
-                            color: color(series,series.seriesIndex),
-                            point: point
-                        });
+                        if(tooltipValue > 0 || showZeroValue){
+                            allData.push({
+                                key: series.key,
+                                value: tooltipValue,
+                                color: color(series,series.seriesIndex),
+                                point: point
+                            });
 
-                        if (showTotalInTooltip && stacked.style() != 'expand' && tooltipValue != null) {
-                          valueSum += tooltipValue;
-                          allNullValues = false;
-                        };
+                            if (showTotalInTooltip && stacked.style() != 'expand' && tooltipValue != null) {
+                                valueSum += tooltipValue;
+                                allNullValues = false;
+                            };
+                        }
                     });
 
                 allData.reverse();

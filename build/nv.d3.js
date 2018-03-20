@@ -1,4 +1,4 @@
-/* nvd3 version 1.8.6 (https://github.com/novus/nvd3) 2017-08-23 */
+/* nvd3 version 1.8.6 (https://github.com/novus/nvd3) 2018-03-20 */
 (function(){
 
 // set up main nv object
@@ -14499,6 +14499,7 @@ nv.models.stackedAreaChart = function() {
         , controlOptions = ['Stacked','Stream','Expanded']
         , controlLabels = {}
         , duration = 250
+        , showZeroValue = true
         ;
 
     state.style = stacked.style();
@@ -14885,17 +14886,19 @@ nv.models.stackedAreaChart = function() {
 
                         //If we are in 'expand' mode, use the stacked percent value instead of raw value.
                         var tooltipValue = (stacked.style() == 'expand') ? point.display.y : chart.y()(point,pointIndex);
-                        allData.push({
-                            key: series.key,
-                            value: tooltipValue,
-                            color: color(series,series.seriesIndex),
-                            point: point
-                        });
+                        if(tooltipValue > 0 || showZeroValue){
+                            allData.push({
+                                key: series.key,
+                                value: tooltipValue,
+                                color: color(series,series.seriesIndex),
+                                point: point
+                            });
 
-                        if (showTotalInTooltip && stacked.style() != 'expand' && tooltipValue != null) {
-                          valueSum += tooltipValue;
-                          allNullValues = false;
-                        };
+                            if (showTotalInTooltip && stacked.style() != 'expand' && tooltipValue != null) {
+                                valueSum += tooltipValue;
+                                allNullValues = false;
+                            };
+                        }
                     });
 
                 allData.reverse();
