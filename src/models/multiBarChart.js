@@ -406,10 +406,11 @@ nv.models.multiBarChart = function() {
                             xValue = point.x;
                             if (singlePoint === undefined) singlePoint = point;
                             if (pointXLocation === undefined) pointXLocation = e.mouseX;
-                            if(xValue >0 || showZeroValue) {
+                            var yValue = chart.y()(point, pointIndex);
+                            if(yValue >0 || showZeroValue) {
                                 allData.push({
                                     key: series.key,
-                                    value: chart.y()(point, pointIndex),
+                                    value: yValue,
                                     color: color(series, series.seriesIndex),
                                     data: series.values[pointIndex]
                                 });
